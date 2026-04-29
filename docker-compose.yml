@@ -1,0 +1,35 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    command:
+      - "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    environment:
+      APP_ADDR: ":8080"
+      DB_HOST: "mysql"
+      DB_PORT: "3306"
+      DB_USER: "root"
+      DB_PASSWORD: "root"
+      JWT_SECRET: "dev-secret"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/app
+      - air_tmp:/app/tmp
+
+volumes:
+  mysql_data:
+  air_tmp:

@@ -1,0 +1,21 @@
+info:
+  contact: {}
+paths:
+  /hello:
+    get:
+      consumes:
+      - application/json
+      description: Say hello
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Hello API
+      tags:
+      - test
+swagger: "2.0"
