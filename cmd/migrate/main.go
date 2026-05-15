@@ -95,12 +95,12 @@ Env:
 }
 
 func mustRun(action string, db *sql.DB, dir string, args []string) {
-	if err := runErr(action, db, dir, args); err != nil {
+	if err := runMigration(action, db, dir, args); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func runErr(action string, db *sql.DB, dir string, args []string) error {
+func runMigration(action string, db *sql.DB, dir string, args []string) error {
 	switch action {
 	case "up":
 		return goose.Up(db, dir)
@@ -151,7 +151,7 @@ func migrateAllTenants(cfg config.Config, migrationsRoot, publicSchema, prefix, 
 		db := mustOpenDB(cfg, schema)
 		err := func() error {
 			defer db.Close()
-			return runErr(action, db, filepath.Join(migrationsRoot, "tenant"), args)
+			return runMigration(action, db, filepath.Join(migrationsRoot, "tenant"), args)
 		}()
 		if err != nil {
 			log.Fatalf("tenant %s: %v", tenantID, err)
